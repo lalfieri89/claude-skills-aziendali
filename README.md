@@ -6,11 +6,13 @@ Pacchetto di skill personalizzate per Claude Code, ottimizzate per progetti **Ja
 
 ## Skill incluse
 
-| Skill | Comando | Descrizione |
-|-------|---------|-------------|
-| Architettura progetto | `/architettura-progetto` | Analisi architetturale completa del progetto |
-| Revisione codice | `/revisione-codice` | Code review qualità, sicurezza e architettura |
-| Gestione test | `/gestione-test` | Genera, revisiona e analizza i gap di test |
+| Skill | Comando | Ruolo | Descrizione |
+|-------|---------|-------|-------------|
+| Architettura progetto | `/architettura-progetto` | Tutti | Analisi architetturale completa del progetto |
+| Revisione codice | `/revisione-codice` | Tutti | Code review qualità, sicurezza e architettura |
+| Gestione test | `/gestione-test` | Sviluppatore | Genera, revisiona e analizza i gap di test |
+| Gestione commit | `/gestione-commit` | Sviluppatore | Pre-commit check, fix, messaggio Conventional Commits e push |
+| Revisione commit | `/revisione-commit` | Team Leader | Review di un commit/PR su GitHub con report strutturato |
 
 ---
 
@@ -18,6 +20,10 @@ Pacchetto di skill personalizzate per Claude Code, ottimizzate per progetti **Ja
 
 - [Claude Code](https://docs.anthropic.com/it/docs/claude-code/getting-started) installato
 - macOS/Linux (per `install.sh`) oppure Windows (per `install.bat`)
+- [GitHub CLI (`gh`)](https://cli.github.com/) installato e autenticato — richiesto da `/gestione-commit` e `/revisione-commit`
+  ```bash
+  gh auth login   # da eseguire una sola volta per sviluppatore
+  ```
 
 ---
 
@@ -93,6 +99,50 @@ Cosa fa:
 
 ---
 
+### `/gestione-commit` — per lo Sviluppatore
+
+Workflow completo pre-commit. Lancia senza argomenti, opera sulle modifiche già staged.
+
+```bash
+git add src/main/java/it/csea/mioprogetto/service/CalcoloService.java
+/gestione-commit
+```
+
+Cosa fa in sequenza:
+1. Verifica cosa è staged e segnala file dimenticati
+2. Scansiona il diff per segreti/credenziali, debug code, TODO, problemi architetturali
+3. Se trova problemi CRITICI → si ferma (nessun commit)
+4. Se trova ATTENZIONI → propone fix e chiede conferma
+5. Genera il messaggio di commit secondo **Conventional Commits** (50/72 rule)
+6. Chiede conferma del messaggio, poi esegue `git commit`
+7. Chiede se fare `git push origin <branch>`
+
+---
+
+### `/revisione-commit` — per il Team Leader
+
+Review di un commit specifico o di una PR. Richiede `gh auth login` eseguito in precedenza.
+
+```bash
+# Review di un commit
+/revisione-commit a1b2c3d
+
+# Review di una PR
+/revisione-commit 42
+```
+
+Cosa analizza:
+- Formato messaggio di commit (Conventional Commits)
+- Sicurezza: credenziali hardcoded, SQL injection, CORS
+- Qualità Java: field injection, catch generici, debug prints
+- Architettura: violazioni layer, Entity nei Controller, logica nel Controller
+- Test: nuovi metodi senza test, `@MockBean` deprecato
+- Performance: N+1, query senza paginazione
+
+Output: report con livelli CRITICO / ATTENZIONE / INFO + verdetto APPROVATO / APPROVATO CON RISERVE / RICHIEDE MODIFICHE.
+
+---
+
 ## Aggiornare le skill
 
 Quando viene rilasciata una nuova versione del pacchetto:
@@ -119,11 +169,13 @@ cp templates/CLAUDE.md.template /path/al/tuo/progetto/CLAUDE.md
 ```
 claude-skills-aziendali/
 ├── skills/
-│   ├── architettura-progetto/SKILL.md
-│   ├── gestione-test/SKILL.md
-│   └── revisione-codice/SKILL.md
+│   ├── architettura-progetto/SKILL.md   ← analisi architetturale
+│   ├── gestione-commit/SKILL.md         ← workflow pre-commit (sviluppatore)
+│   ├── gestione-test/SKILL.md           ← ciclo di vita test
+│   ├── revisione-codice/SKILL.md        ← code review classe
+│   └── revisione-commit/SKILL.md        ← review commit/PR (team leader)
 ├── templates/
-│   └── CLAUDE.md.template
+│   └── CLAUDE.md.template               ← template per nuovi progetti
 ├── install.sh
 ├── install.bat
 └── README.md
