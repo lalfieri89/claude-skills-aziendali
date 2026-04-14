@@ -113,9 +113,10 @@ Cosa fa in sequenza:
 2. Scansiona il diff per segreti/credenziali, debug code, TODO, problemi architetturali
 3. Se trova problemi CRITICI → si ferma (nessun commit)
 4. Se trova ATTENZIONI → propone fix e chiede conferma
-5. Genera il messaggio di commit secondo **Conventional Commits** (50/72 rule)
-6. Chiede conferma del messaggio, poi esegue `git commit`
-7. Chiede se fare `git push origin <branch>`
+5. Genera il messaggio di commit secondo **Conventional Commits** (<=50 caratteri)
+6. Chiede conferma del messaggio
+7. Chiede conferma del commit `git commit`
+8. Chiede se fare `git push origin <branch>`
 
 ---
 

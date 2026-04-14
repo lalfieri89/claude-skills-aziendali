@@ -93,6 +93,7 @@ Se ci sono problemi ATTENZIONE o INFO:
 ## FASE 4 — Generazione messaggio di commit
 
 Analizza il diff staged per determinare la natura delle modifiche e genera il messaggio seguendo la specifica **Conventional Commits**.
+| Lunghezza subject | ≤ 50 caratteri |
 
 ### Formato obbligatorio:
 ```
