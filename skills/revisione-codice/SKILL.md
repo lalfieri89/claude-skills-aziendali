@@ -25,7 +25,7 @@ Devi:
 
 **1. Principi SOLID e Clean Code**
 - Violazioni del Single Responsibility Principle (classi con troppe responsabilità o troppo grandi)
-- Metodi troppo lunghi (più di 40 righe)
+- Metodi troppo lunghi (più di 20-30 righe; idealmente 10-15 righe per metodi ben focalizzati)
 - Duplicazione di codice (violazione DRY)
 - Presenza di magic numbers o stringhe hardcoded non costantizzate
 - Naming non descrittivo o ambiguo (variabili, metodi, classi)

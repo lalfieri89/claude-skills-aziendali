@@ -18,8 +18,6 @@
 
 ## Architettura
 
-Package root: `it.csea.<nome-modulo>`
-
 Struttura layer:
 - `controller/` → REST endpoints, solo DTO, nessuna logica business
 - `service/` → logica applicativa, `@Transactional` su metodi write
@@ -47,5 +45,3 @@ Non aggiungere `@Audited` a nuove entity senza coordinamento col team (impatto s
 | `prod`        | Prod     | `application-produzione.properties` |
 
 ## Note specifiche del progetto
-
-<!-- Aggiungi qui eventuali quirk, gotcha o info non ovvie specifiche di questo progetto -->

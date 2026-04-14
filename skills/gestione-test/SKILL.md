@@ -28,8 +28,8 @@ Se non esiste una classe di test o i test coprono meno del 70% dei metodi pubbli
 **Stack obbligatorio in base al layer:**
 
 - **Service** → `@ExtendWith(MockitoExtension.class)`, mock di tutti i repository e service iniettati
-- **Controller** → `@WebMvcTest(NomeController.class)` + `MockMvc`, mock del service con `@MockBean`
-- **Repository** → `@DataJpaTest`, database H2 in-memory, nessun mock
+- **Controller** → `@WebMvcTest(NomeController.class)` + `MockMvc`, mock del service con `@MockitoBean` (Spring Boot ≥ 3.4; usare `@MockBean` solo per versioni precedenti)
+- **Repository** → `@DataJpaTest`, database H2 in-memory, nessun mock (per test production-like usare Testcontainers con `@ServiceConnection`)
 
 **Regole per i test:**
 
@@ -43,6 +43,7 @@ Per ogni metodo pubblico genera almeno 3 test:
 
 **Struttura base:**
 ```java
+// Service unit test (puro, senza Spring context)
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Test di NomeClasse")
 class NomeClasseTest {
@@ -63,8 +64,19 @@ class NomeClasseTest {
     void dovrebbe_restituireX_quando_Y() {
         // Arrange
         // Act
-        // Assert (usa AssertJ: assertThat(...))
+        // Assert (usa AssertJ: assertThat(...).isEqualTo(...))
     }
+}
+
+// Controller test — usa @MockitoBean (Spring Boot ≥ 3.4, sostituisce @MockBean)
+@WebMvcTest(NomeController.class)
+class NomeControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @MockitoBean
+    NomeService nomeService;
 }
 ```
 
