@@ -1,0 +1,51 @@
+# [NOME PROGETTO]
+
+## Comandi principali
+
+```bash
+# Build
+./mvnw clean package -P dev           # sviluppo locale
+./mvnw clean package -P coll          # UAT/collaudo
+./mvnw clean package -P prod          # produzione
+
+# Run locale
+./mvnw spring-boot:run -P dev
+
+# Test
+./mvnw test
+./mvnw test -Dtest=NomeClasseTest     # test singolo
+```
+
+## Architettura
+
+Package root: `it.csea.<nome-modulo>`
+
+Struttura layer:
+- `controller/` → REST endpoints, solo DTO, nessuna logica business
+- `service/` → logica applicativa, `@Transactional` su metodi write
+- `repository/` → Spring Data JPA, nessuna logica
+- `entity/` → JPA + Lombok, campi monetari come `BigDecimal`
+- `dto/` → oggetti di trasferimento, nessuna dipendenza da Entity
+- `mapper/` → conversione Entity ↔ DTO
+
+## Convenzioni di risposta HTTP
+
+Tutti gli endpoint usano `HttpResponseDTO` come wrapper di risposta.
+Gestione eccezioni sempre con try-catch nel Controller.
+
+## Audit trail
+
+Le entity con `@Audited` tracciano ogni modifica in tabelle `*_AUD`.
+Non aggiungere `@Audited` a nuove entity senza coordinamento col team (impatto su DB).
+
+## Ambienti
+
+| Profile Maven | Ambiente | Properties file |
+|---------------|----------|-----------------|
+| `dev`         | Locale   | `application-locale.properties` |
+| `coll`        | UAT      | `application-collaudo.properties` |
+| `prod`        | Prod     | `application-produzione.properties` |
+
+## Note specifiche del progetto
+
+<!-- Aggiungi qui eventuali quirk, gotcha o info non ovvie specifiche di questo progetto -->
