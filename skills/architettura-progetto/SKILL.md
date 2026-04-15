@@ -12,7 +12,7 @@ Analizza l'intero progetto partendo dal path `$ARGUMENTS`.
 
 ---
 
-## ⚙️ Strategia di analisi
+## Strategia di analisi
 
 1. Usa `Glob` per individuare:
    - Controller
@@ -33,23 +33,23 @@ Analizza l'intero progetto partendo dal path `$ARGUMENTS`.
 
 ---
 
-# 🧱 Controlli architetturali
+# Controlli architetturali
 
 ## 1. Separazione dei layer
 
 Verifica:
-- Controller → deve dipendere solo da Service
-- Service → deve dipendere da Repository
-- Repository → solo accesso dati
-- Entity → non deve essere usata nei Controller
-- DTO → separati dalle Entity
+- Controller deve dipendere solo da Service
+- Service deve dipendere da Repository
+- Repository: solo accesso dati
+- Entity: non deve essere usata nei Controller
+- DTO: separati dalle Entity
 
-🚨 Violazioni critiche:
+Violazioni critiche:
 - Controller che usa Repository direttamente
 - Service che accede a EntityManager direttamente
 - Entity esposte come response API
 
-⚠️ Regola di verifica — Entity nei Controller:
+Regola di verifica — Entity nei Controller:
 Segnala una violazione **solo se l'Entity è effettivamente utilizzata nel codice** (come parametro, tipo di ritorno, variabile, o argomento). Un semplice `import` non utilizzato NON è una violazione architetturale e non va segnalato.
 
 ---
@@ -113,30 +113,30 @@ Individua:
 
 ---
 
-# 🚨 Classificazione severità
+# Classificazione severità
 
-- **CRITICO** → Violazioni architetturali gravi o rischi strutturali
-- **ATTENZIONE** → Problemi strutturali rilevanti
-- **INFO** → Miglioramenti o ottimizzazioni
+- **CRITICO** — Violazioni architetturali gravi o rischi strutturali
+- **ATTENZIONE** — Problemi strutturali rilevanti
+- **INFO** — Miglioramenti o ottimizzazioni
 
 ---
 
-# 📤 Output richiesto
+# Output richiesto
 
-## 🔴 Violazioni architetturali
+## Violazioni architetturali
 
 Per ogni problema:
 
-- **Livello:** [CRITICO | ATTENZIONE | INFO]  
-- **Categoria:** (Layering, Dependency, Transaction, API, ecc.)  
-- **File/Package:** posizione  
-- **Problema:** descrizione chiara  
-- **Impatto:** perché è un problema  
-- **Soluzione:** come correggere, con un breve esempio di codice che mostra il pattern corretto da applicare  
+- **Livello:** [CRITICO | ATTENZIONE | INFO]
+- **Categoria:** (Layering, Dependency, Transaction, API, ecc.)
+- **File/Package:** posizione
+- **Problema:** descrizione chiara
+- **Impatto:** perché è un problema
+- **Soluzione:** come correggere, con un breve esempio di codice che mostra il pattern corretto da applicare
 
 ---
 
-## 🧠 Analisi globale
+## Analisi globale
 
 - Struttura generale del progetto
 - Pattern architetturale identificato (se presente)
@@ -144,20 +144,20 @@ Per ogni problema:
 
 ---
 
-## 🔁 Pattern ricorrenti
+## Pattern ricorrenti
 
 Elenco dei problemi ripetuti nel codice (es. "Controller con logica business in 8 classi")
 
 ---
 
-## 📊 Riepilogo
+## Riepilogo
 
-- Numero totale: N critici, N attenzioni, N info  
+- Numero totale: N critici, N attenzioni, N info
 - Giudizio complessivo: **SANO / DEBITO TECNICO / CRITICO**
 
 ---
 
-# ⚠️ Regole importanti
+# Regole importanti
 
 - Non analizzare file singoli in profondità (focus architetturale)
 - Non essere generico

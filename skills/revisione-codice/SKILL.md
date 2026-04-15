@@ -107,7 +107,7 @@ In base al layer identificato, verifica le regole specifiche:
 - **Categoria:** (es. Sicurezza, Performance, Architettura - Controller, ecc.)
 - **Riga:** numero riga del file
 - **Problema:** descrizione chiara in italiano
-- **Soluzione:** come correggerlo, descritta in modo chiaro e conciso — senza esempi di codice
+- **Soluzione:** come correggerlo, con un breve esempio di codice che mostra il pattern corretto da applicare
 
 ---
 

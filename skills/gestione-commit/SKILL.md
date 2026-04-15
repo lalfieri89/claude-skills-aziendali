@@ -141,10 +141,15 @@ Vuoi usare questo messaggio, modificarlo o inserirne uno personalizzato? [usa/mo
 
 ## FASE 5 — Commit e push
 
-Dopo la conferma del messaggio, esegui il commit:
+Dopo la conferma del messaggio, esegui il commit usando heredoc per gestire correttamente i messaggi multiriga:
 
 ```bash
-git commit -m "<messaggio confermato>"
+git commit -m "$(cat <<'EOF'
+<subject>
+
+<corpo opzionale>
+EOF
+)"
 ```
 
 Verifica che il commit sia andato a buon fine con `git log --oneline -1`.
@@ -170,8 +175,8 @@ Mostra il risultato. Se il push fallisce per "non-fast-forward", spiega che è n
 
 Mostra un riepilogo:
 ```
-✅ Commit: <hash breve> — <messaggio>
-✅ Push:   origin/<branch> (se eseguito)
+Commit: <hash breve> — <messaggio>
+Push:   origin/<branch> (se eseguito)
 
 Problemi rilevati e risolti: N
 Problemi segnalati (richiedono attenzione): N

@@ -227,17 +227,17 @@ Riporta:
 
 ## FASE 5 — Report strutturato
 
-### 📋 File esaminati
+### File esaminati
 
 Elenca ogni file con il layer identificato:
 ```
-✅ CalcoloService.java         [Service]
-✅ CalcoloController.java      [Controller]
-⚠️ PraticaDTO.java             [DTO] — dipende da Entity
-🔴 PraticaController.java      [Controller] — usa Repository direttamente
+[OK]  CalcoloService.java         [Service]
+[OK]  CalcoloController.java      [Controller]
+[ATT] PraticaDTO.java             [DTO] — dipende da Entity
+[ERR] PraticaController.java      [Controller] — usa Repository direttamente
 ```
 
-### 🔴 Problemi rilevati
+### Problemi rilevati
 
 Per ogni problema trovato:
 ```
@@ -245,21 +245,21 @@ Per ogni problema trovato:
 Categoria: (Sicurezza | SOLID | Architettura - Controller | Performance | Test | ecc.)
 Problema: descrizione chiara in italiano
 Impatto: perché è rilevante per il sistema
-Soluzione: come correggere
+Soluzione: come correggere, con un breve esempio di codice che mostra il pattern corretto da applicare
 ```
 
-### 🧾 Messaggio di commit
+### Messaggio di commit
 
 ```
 Subject:          "feat(service): add interest calculation"
-Formato:          ✅ CONFORME / ❌ NON CONFORME
+Formato:          CONFORME / NON CONFORME
 Tipo rilevato:    feat
-Coerente con diff: ✅ sì / ❌ no (es. il tipo è "fix" ma è una nuova feature)
+Coerente con diff: sì / no (es. il tipo è "fix" ma è una nuova feature)
 Body:             presente / assente
 Breaking change:  sì / no
 ```
 
-### 📊 Statistiche
+### Statistiche
 
 ```
 File esaminati:   N (controller: N, service: N, entity: N, ...)
@@ -268,7 +268,7 @@ Righe rimosse:    -N
 File sensibili:   pom.xml modificato / nessuno
 ```
 
-### ✅ Verdetto finale
+### Verdetto finale
 
 ```
 CRITICI:    N
