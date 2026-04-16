@@ -1,9 +1,8 @@
 ---
 name: gestione-test
 description: Gestisce l'intero ciclo dei test per una classe Java Spring Boot. Analizza se esistono test, li genera se mancano, li revisiona se esistono, e alla fine indica i gap rimasti. Usare quando si vuole aggiungere o verificare i test di una classe esistente.
-disable-model-invocation: true
 argument-hint: "[percorso file opzionale]"
-allowed-tools: Read Grep Glob Write
+allowed-tools: Read Grep Glob Write Bash
 ---
 
 Analizza il file `$ARGUMENTS` (se non specificato, usa il file aperto nell'IDE).
@@ -103,7 +102,31 @@ Per ogni problema trovato:
 
 ---
 
-## FASE 4 — Gap analysis e riepilogo finale
+## FASE 4 — Esecuzione test, fix iterativo e riepilogo
+
+### 4.1 — Esecuzione iniziale
+
+Esegui i test della classe con Maven, isolando solo la classe di test generata/revisionata:
+
+```bash
+mvn test -pl . -Dtest=NomeClasseTest -Dsurefire.failIfNoSpecifiedTests=false 2>&1
+```
+
+Se il progetto non compila o il comando non è applicabile, adatta il comando al build tool usato (Gradle, ecc.).
+
+### 4.2 — Loop fix/rilancio
+
+**Ripeti questo ciclo finché tutti i test passano (o fino a 5 iterazioni massime):**
+
+1. Leggi l'output del test
+2. Per ogni test fallito:
+   - Identifica la causa: asserzione sbagliata, mock non configurato correttamente, dato di test errato, firma del metodo cambiata
+   - Correggi il file di test (non toccare mai il sorgente della classe testata)
+3. Rilancia i test
+4. Se tutti i test passano → esci dal loop
+5. Se dopo 5 iterazioni ci sono ancora fallimenti → documenta i test irrisolvibili nella sezione finale e spiega perché
+
+### 4.3 — Gap analysis e riepilogo finale
 
 Produci una tabella con la copertura finale:
 
