@@ -21,12 +21,34 @@ if errorlevel 1 (
     echo.
 )
 
+set "CLAUDE_DIR=%USERPROFILE%\.claude"
+set "SOURCE_CLAUDE=%~dp0CLAUDE.md"
+
 REM Crea le directory se non esistono
 if not exist "%SKILLS_DIR%" mkdir "%SKILLS_DIR%"
 if not exist "%AGENTS_DIR%" mkdir "%AGENTS_DIR%"
 
 set INSTALLED=0
 set SKIPPED=0
+
+REM Copia CLAUDE.md nella cartella .claude locale
+echo Installazione CLAUDE.md...
+if exist "%CLAUDE_DIR%\CLAUDE.md" (
+    set /p "answer=  CLAUDE.md esiste gia'. Sovrascrivere? [s/N] "
+    if /i "!answer!"=="s" (
+        copy /Y "%SOURCE_CLAUDE%" "%CLAUDE_DIR%\CLAUDE.md" >nul
+        echo   OK CLAUDE.md ^(aggiornato^)
+        set /a INSTALLED+=1
+    ) else (
+        echo   - CLAUDE.md ^(saltato^)
+        set /a SKIPPED+=1
+    )
+) else (
+    copy /Y "%SOURCE_CLAUDE%" "%CLAUDE_DIR%\CLAUDE.md" >nul
+    echo   OK CLAUDE.md ^(installato^)
+    set /a INSTALLED+=1
+)
+echo.
 
 REM Installa le skill (directory)
 echo Installazione skill...

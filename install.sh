@@ -4,11 +4,13 @@
 
 set -e
 
+CLAUDE_DIR="$HOME/.claude"
 SKILLS_DIR="$HOME/.claude/skills"
 AGENTS_DIR="$HOME/.claude/agents"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_SKILLS="$SCRIPT_DIR/skills"
 SOURCE_AGENTS="$SCRIPT_DIR/agents"
+SOURCE_CLAUDE="$SCRIPT_DIR/CLAUDE.md"
 
 echo "=== Installazione skill Claude Code aziendali ==="
 echo ""
@@ -27,6 +29,28 @@ mkdir -p "$AGENTS_DIR"
 
 INSTALLED=0
 SKIPPED=0
+
+# Copia CLAUDE.md nella cartella .claude locale
+echo "Installazione CLAUDE.md..."
+if [ -f "$CLAUDE_DIR/CLAUDE.md" ]; then
+  read -r -p "  CLAUDE.md esiste già. Sovrascrivere? [s/N] " answer
+  case "$answer" in
+    [sS])
+      cp "$SOURCE_CLAUDE" "$CLAUDE_DIR/CLAUDE.md"
+      echo "  ✓ CLAUDE.md (aggiornato)"
+      INSTALLED=$((INSTALLED + 1))
+      ;;
+    *)
+      echo "  - CLAUDE.md (saltato)"
+      SKIPPED=$((SKIPPED + 1))
+      ;;
+  esac
+else
+  cp "$SOURCE_CLAUDE" "$CLAUDE_DIR/CLAUDE.md"
+  echo "  ✓ CLAUDE.md (installato)"
+  INSTALLED=$((INSTALLED + 1))
+fi
+echo ""
 
 # Installa le skill (directory)
 echo "Installazione skill..."
