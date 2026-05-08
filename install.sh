@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
-# install.sh — Installa le skill Claude Code aziendali
+# install.sh — Installa le skill e gli agenti Claude Code aziendali
 # Compatibile con macOS e Linux
 
 set -e
 
 SKILLS_DIR="$HOME/.claude/skills"
+AGENTS_DIR="$HOME/.claude/agents"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="$SCRIPT_DIR/skills"
+SOURCE_SKILLS="$SCRIPT_DIR/skills"
+SOURCE_AGENTS="$SCRIPT_DIR/agents"
 
 echo "=== Installazione skill Claude Code aziendali ==="
 echo ""
@@ -19,22 +21,22 @@ if ! command -v claude &>/dev/null; then
   echo ""
 fi
 
-# Crea la directory skills se non esiste
-if [ ! -d "$SKILLS_DIR" ]; then
-  echo "Creazione directory $SKILLS_DIR ..."
-  mkdir -p "$SKILLS_DIR"
-fi
+# Crea le directory se non esistono
+mkdir -p "$SKILLS_DIR"
+mkdir -p "$AGENTS_DIR"
 
-# Installa ogni skill
 INSTALLED=0
 SKIPPED=0
 
-for skill_dir in "$SOURCE_DIR"/*/; do
+# Installa le skill (directory)
+echo "Installazione skill..."
+for skill_dir in "$SOURCE_SKILLS"/*/; do
+  [ -d "$skill_dir" ] || continue
   skill_name=$(basename "$skill_dir")
   dest="$SKILLS_DIR/$skill_name"
 
   if [ -d "$dest" ]; then
-    read -r -p "La skill '$skill_name' esiste già. Sovrascrivere? [s/N] " answer
+    read -r -p "  La skill '$skill_name' esiste già. Sovrascrivere? [s/N] " answer
     case "$answer" in
       [sS])
         cp -r "$skill_dir" "$dest"
@@ -53,10 +55,65 @@ for skill_dir in "$SOURCE_DIR"/*/; do
   fi
 done
 
+# Installa le skill file singoli (es. init-project.md)
+for skill_file in "$SOURCE_SKILLS"/*.md; do
+  [ -f "$skill_file" ] || continue
+  skill_name=$(basename "$skill_file")
+  dest="$SKILLS_DIR/$skill_name"
+
+  if [ -f "$dest" ]; then
+    read -r -p "  La skill '$skill_name' esiste già. Sovrascrivere? [s/N] " answer
+    case "$answer" in
+      [sS])
+        cp "$skill_file" "$dest"
+        echo "  ✓ $skill_name (aggiornata)"
+        INSTALLED=$((INSTALLED + 1))
+        ;;
+      *)
+        echo "  - $skill_name (saltata)"
+        SKIPPED=$((SKIPPED + 1))
+        ;;
+    esac
+  else
+    cp "$skill_file" "$dest"
+    echo "  ✓ $skill_name (installata)"
+    INSTALLED=$((INSTALLED + 1))
+  fi
+done
+
+# Installa gli agenti
 echo ""
-echo "Installazione completata: $INSTALLED installate, $SKIPPED saltate."
+echo "Installazione agenti..."
+for agent_file in "$SOURCE_AGENTS"/*.md; do
+  [ -f "$agent_file" ] || continue
+  agent_name=$(basename "$agent_file")
+  dest="$AGENTS_DIR/$agent_name"
+
+  if [ -f "$dest" ]; then
+    read -r -p "  L'agente '$agent_name' esiste già. Sovrascrivere? [s/N] " answer
+    case "$answer" in
+      [sS])
+        cp "$agent_file" "$dest"
+        echo "  ✓ $agent_name (aggiornato)"
+        INSTALLED=$((INSTALLED + 1))
+        ;;
+      *)
+        echo "  - $agent_name (saltato)"
+        SKIPPED=$((SKIPPED + 1))
+        ;;
+    esac
+  else
+    cp "$agent_file" "$dest"
+    echo "  ✓ $agent_name (installato)"
+    INSTALLED=$((INSTALLED + 1))
+  fi
+done
+
+echo ""
+echo "Installazione completata: $INSTALLED installati, $SKIPPED saltati."
 echo ""
 echo "Skill disponibili in Claude Code:"
-echo "  /architettura-progetto <root-progetto>"
-echo "  /gestione-test <percorso-file>"
-echo "  /revisione-codice <percorso-file>"
+echo "  /commit-push-pr [--no-push] [--draft-pr] [--squash]"
+echo "  /java-spring-reviewer <percorso-file>"
+echo "  /test-reviewer <percorso-file>"
+echo "  /init-project"

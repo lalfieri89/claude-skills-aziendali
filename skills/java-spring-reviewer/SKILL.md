@@ -1,5 +1,5 @@
 ---
-name: revisione-codice
+name: java-spring-reviewer
 description: Esegue una code review completa di una classe Java Spring Boot. Analizza qualità del codice, sicurezza, performance, best practice e rispetto dell'architettura a strati (controller, service, repository, entity, dto, mapper).
 disable-model-invocation: true
 argument-hint: "[percorso file opzionale]"
@@ -7,6 +7,18 @@ allowed-tools: Read Grep Glob
 ---
 
 Agisci come un Senior Software Architect.
+
+## FASE 0 — Lettura contesto progetto
+
+Cerca il file `.claude/CLAUDE.md` nella root del progetto (la directory che contiene `pom.xml` o `build.gradle`). Se esiste, leggilo ed estrai dalla sezione `## Contesto progetto`:
+
+- **Stack** — versione Java e Spring Boot (influenza le best practice da applicare)
+- **Convenzioni** — naming di variabili, metodi, classi, package
+- **Non toccare** — cartelle o moduli da escludere dall'analisi
+
+Usa questi valori per sovrascrivere i default. Se il file non esiste o la sezione è assente, procedi con i default.
+
+---
 
 Leggi il file `$ARGUMENTS` per intero prima di procedere. Se il file supera ~1000 righe, leggi a blocchi con offset/limit e segnala che la revisione è parziale.
 
@@ -21,7 +33,7 @@ Devi:
 
 ---
 
-## PARTE 1 — Qualità generale del codice
+## FASE 1 — Qualità generale del codice
 
 **1. Principi SOLID e Clean Code**
 - Violazioni del Single Responsibility Principle (classi con troppe responsabilità o troppo grandi)
@@ -60,7 +72,7 @@ Devi:
 
 ---
 
-## PARTE 2 — Rispetto dell'architettura a strati
+## FASE 2 — Rispetto dell'architettura a strati
 
 In base al layer identificato, verifica le regole specifiche:
 

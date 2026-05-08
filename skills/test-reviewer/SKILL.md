@@ -1,5 +1,5 @@
 ---
-name: gestione-test
+name: test-reviewer
 description: Gestisce l'intero ciclo dei test per una classe Java Spring Boot. Analizza se esistono test, li genera se mancano, li revisiona se esistono, e alla fine indica i gap rimasti. Usare quando si vuole aggiungere o verificare i test di una classe esistente.
 argument-hint: "[percorso file opzionale]"
 allowed-tools: Read Grep Glob Write Bash
@@ -7,7 +7,20 @@ allowed-tools: Read Grep Glob Write Bash
 
 Analizza il file `$ARGUMENTS` (se non specificato, usa il file aperto nell'IDE).
 
-Segui questo flusso in ordine:
+Segui questo flusso in ordine.
+
+---
+
+## FASE 0 — Lettura contesto progetto
+
+Cerca il file `.claude/CLAUDE.md` nella root del progetto (la directory che contiene `pom.xml` o `build.gradle`). Se esiste, leggilo ed estrai dalla sezione `## Contesto progetto`:
+
+- **Stack** — versione Spring Boot (determina `@MockitoBean` vs `@MockBean`), versione Java, DB
+- **Convenzioni** — naming dei metodi di test
+- **Test** — framework aggiuntivi dichiarati (Testcontainers, AssertJ, WireMock)
+- **Non toccare** — cartelle da escludere dalla ricerca dei file di test
+
+Usa questi valori per sovrascrivere i default. Se il file non esiste o la sezione è assente, procedi con i default.
 
 ---
 
